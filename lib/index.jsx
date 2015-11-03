@@ -72,7 +72,7 @@ function extractPaths(route, prefix="") {
     }
 };
 
-module.exports = function FixNamedRoutesSupport(routesMap) {
-    extractPaths(routesMap, "/");
+module.exports = function FixNamedRoutesSupport(routes) {
+    extractPaths(routes, "/");
     ReactRouter.Link = ProperLink;
 };
