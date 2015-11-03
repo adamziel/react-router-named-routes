@@ -26,7 +26,7 @@ this package.
 ## Usage
 
 1. Define all your routes in a single module. You probably do it like this anyway.  
-1. Monkey-patch react router before you `render()` anything:
+1. Use this package before you `render()` anything:
 
 ```js
 var routes = require("myproject/routes");
