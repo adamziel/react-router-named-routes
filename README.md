@@ -15,8 +15,8 @@ This affects a lot of people:
   some kind of url_by_name() or reverse() function
 * It just makes certain things easier.
 
-I need to "just upgrade" my application to react 0.14, without spending
-hours on refactoring. Also I **want** to use named routes. So I created
+I needed to "just upgrade" my application to react 0.14, without spending
+hours on refactoring. Also I **wanted** to use named routes. So I created
 this package.
 
 ## Installation
