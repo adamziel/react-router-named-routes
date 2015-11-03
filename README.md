@@ -30,7 +30,7 @@ var FixNamedRoutesSupport = require("react-router-named-routes");
 FixNamedRoutesSupport(routes);
 ```
 
-That's it, you may now use react-router like this:
+That's it, you may now use react-router just like in react-router 0.13:
 ```js
 <Route name="todo.edit" path="todo/:id/edit" component={TodosList} />
 
@@ -39,4 +39,4 @@ That's it, you may now use react-router like this:
 
 ## License
 
-New BSD and MIT. Check the LICENSE file for all the details.
+New BSD and MIT.
