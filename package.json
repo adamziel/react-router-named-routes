@@ -1,0 +1,29 @@
+{
+  "author": {
+    "email": "adam@adamziel.com",
+    "name": "Adam Zielinski",
+    "url": "http://github.com/adamziel"
+  },
+  "bugs": {
+    "url": "https://github.com/adamziel/react-router-named-routes/issues"
+  },
+  "dependencies": {
+    "react-router": "^1.0.0-rc3",
+  },
+  "description": "Adds support for named routes to React-Router 1.0.0",
+  "devDependencies": {},
+  "engines": {
+    "node": ">=0.4.2"
+  },
+  "homepage": "https://github.com/adamziel/react-router-named-routes/issues",
+  "license": "BSD-3-Clause AND MIT",
+  "main": "./lib/index.js",
+  "name": "react-router-named-routes",
+  "optionalDependencies": {},
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamziel/react-router-named-routes.git"
+  },
+  "version": "1.0.0"
+}
