@@ -8,7 +8,7 @@
     "url": "https://github.com/adamziel/react-router-named-routes/issues"
   },
   "dependencies": {
-    "react-router": "^1.0.0-rc3",
+    "react-router": "^1.0.0-rc3"
   },
   "description": "Adds support for named routes to React-Router 1.0.0",
   "devDependencies": {},
@@ -25,5 +25,5 @@
     "type": "git",
     "url": "git+https://github.com/adamziel/react-router-named-routes.git"
   },
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
