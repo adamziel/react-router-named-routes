@@ -19,6 +19,10 @@ I need to upgrade my application to react 0.14, and I believe it should
 not require hours of refactoring. Also I believe having such functionality
 is an absolute must for a router. So I created this package to fix .
 
+## Installation
+
+`npm install react-router-named-routes`
+
 ## Usage
 
 1. Define all your routes in a single module. You probably do it like this anyway.  
