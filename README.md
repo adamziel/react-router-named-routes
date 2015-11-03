@@ -21,8 +21,8 @@ is an absolute must for a router. So I created this package to fix .
 
 ## Usage
 
-1) Define all your routes in a single module. You probably do it like this anyway.
-2) Monkey-patch react router:
+1. Define all your routes in a single module. You probably do it like this anyway.  
+1. Monkey-patch react router:
 
 ```js
 var routes = require("myproject/routes");
