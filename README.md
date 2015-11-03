@@ -6,18 +6,18 @@ grace period:
 
 https://github.com/rackt/react-router/issues/1840#issue-105240108
 
-This is not a cool move:
+This affects a lot of people:
 
 * This is a breaking change, and not a small one
 * A lot of existing software is effectively stuck on old version of react
   since the upgrade requires too much effort
-* It is perfectly valid function to have, and why remove it when any decent
-  web framework offers some kind of url_by_name() or reverse() function
+* It is perfectly valid function to have, any decent web framework offers
+  some kind of url_by_name() or reverse() function
 * It just makes certain things easier.
 
-I need to upgrade my application to react 0.14, and I believe it should
-not require hours of refactoring. Also I believe having such functionality
-is an absolute must for a router. So I created this package to fix .
+I need to "just upgrade" my application to react 0.14, without spending
+hours on refactoring. Also I **want** to use named routes. So I created
+this package.
 
 ## Installation
 
