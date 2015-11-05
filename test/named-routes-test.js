@@ -188,7 +188,7 @@ describe('Link', function() {
         });
 
         var root = render(
-            React.createElement(Router, {}, [
+            React.createElement(Router, {history: createBrowserHistory()}, [
                 React.createElement(Route, {path: '/', component: TestComponent})
             ]),
             'div'
@@ -197,20 +197,20 @@ describe('Link', function() {
 
         expect(root.children.length).to.equal(13);
         var i = 0;
-        expect(root.children[i++].getAttribute('href')).to.equal('#/');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/app');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/app');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/users');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/users');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/users/list');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/users/:id');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/users/4');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/users/_mal_ici__ous');
+        expect(root.children[i++].getAttribute('href')).to.equal('/');
+        expect(root.children[i++].getAttribute('href')).to.equal('/app');
+        expect(root.children[i++].getAttribute('href')).to.equal('/app');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users/list');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users/:id');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users/4');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users/_mal_ici__ous');
 
-        expect(root.children[i++].getAttribute('href')).to.equal('#/some-unnamed-path');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/users');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/users/5');
+        expect(root.children[i++].getAttribute('href')).to.equal('/some-unnamed-path');
+        expect(root.children[i++].getAttribute('href')).to.equal('/');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users/5');
     });
 
     it('correctly renders <Link /> elements with custom resolver', function() {
@@ -234,7 +234,7 @@ describe('Link', function() {
         });
 
         var root = render(
-            React.createElement(Router, {}, [
+            React.createElement(Router, {history: createBrowserHistory()}, [
                 React.createElement(Route, {path: '/', component: TestComponent})
             ]),
             'div'
@@ -243,9 +243,9 @@ describe('Link', function() {
 
         expect(root.children.length).to.equal(3);
         var i = 0;
-        expect(root.children[i++].getAttribute('href')).to.equal('#/users/:id');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/user/:id-parent/:id');
-        expect(root.children[i++].getAttribute('href')).to.equal('#/user/semi:colon/:colon');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users/:id');
+        expect(root.children[i++].getAttribute('href')).to.equal('/user/:id-parent/:id');
+        expect(root.children[i++].getAttribute('href')).to.equal('/user/semi:colon/:colon');
     });
 
 });

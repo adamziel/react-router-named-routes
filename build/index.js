@@ -116,11 +116,17 @@
     }
 
     ;
-    var FixNamedRoutesSupport = MonkeyPatchNamedRoutesSupport;
+
+    function setNamedURLResolver(resolver) {
+        exports.NamedURLResolver = NamedURLResolver = resolver;
+    }
+
+    ;
     exports.Link = Link;
+    exports.NamedLink = Link;
     exports.NamedURLResolver = NamedURLResolver;
     exports.NamedURLResolverClass = NamedURLResolverClass;
-    exports.FixNamedRoutesSupport = FixNamedRoutesSupport;
-    exports. // backwards compat
-    MonkeyPatchNamedRoutesSupport = MonkeyPatchNamedRoutesSupport;
+    exports.MonkeyPatchNamedRoutesSupport = MonkeyPatchNamedRoutesSupport;
+    exports.FixNamedRoutesSupport = MonkeyPatchNamedRoutesSupport;
+    exports.setNamedURLResolver = setNamedURLResolver;
 });

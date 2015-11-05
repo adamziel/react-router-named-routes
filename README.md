@@ -25,21 +25,72 @@ this package.
 
 ## Usage
 
-1. Define all your routes in a single module. You probably do it like this anyway.  
+1. Define all your routes in a single module. You probably do it like this anyway.
 1. Use this package before you `render()` anything:
 
 ```js
 var routes = require("myproject/routes");
-var FixNamedRoutesSupport = require("react-router-named-routes");
+var {FixNamedRoutesSupport} = require("react-router-named-routes");
 FixNamedRoutesSupport(routes);
 ```
 
 That's it, you may now use react-router just like in react-router 0.13:
 ```js
-<Route name="todo.edit" path="todo/:id/edit" component={TodosList} />
+<Route name="todo.edit" path="todo/:id/edit" component={TodoEditForm} />
 
 <Link to="todo.edit" params={{id: 123}}>Edit</Link>
 ```
+
+## Doesn't like monkey-patching?
+
+You may just use `<Link />` component provided by this package instead
+of the one provided by `react-router`. This requires some refactoring but
+not that much:
+
+1. Define all your routes in a single module. You probably do it like this anyway.
+1. Use this package before you `render()` anything:
+
+```js
+var routes = require("myproject/routes");
+var {Link, NamedURLResolver} = require("react-router-named-routes");
+NamedURLResolver.mergeRouteTree(routes, "/");
+
+<Route name="todo.edit" path="todo/:id/edit" component={TodoEditForm} />
+<Link to="todo.edit" params={{id: 123}}>Edit</Link>
+```
+
+## Caveats
+
+This probably breaks the shiny new `async routes` function introduced in ReactRouter `1.0.0`.
+If you come straight from 0.13 you don't use it anyway.
+
+## Contributing
+
+A pull request or an issue report is always welcome. If this package saved you some
+time, starring this repo is a nice way to say "thank you".
+
+## Advanced stuff and implementation details
+
+Named Routes are resolved by a simple class (60 lines of code) called `NamedURLResolverClass`.
+
+If you want some custom logic involved in resolving your named routes, or routes in general,
+you may extend the class `NamedURLResolverClass` from this package and replace the global resolver
+like this:
+
+```
+var {NamedURLResolverClass, setNamedURLResolver} = require("react-router-named-routes");
+class CustomURLResolver extends NamedURLResolverClass {
+  resolve(name, params) {
+    // ...do some fancy stuff
+  }
+}
+setNamedURLResolver(new CustomURLResolver());
+```
+
+Also, a `<Link />` component will accept a `resolver` property if you don't want to use
+a default one for any reason:
+
+`<Link resolver={new CustomURLResolver()} />``
 
 ## License
 
