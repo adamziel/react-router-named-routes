@@ -1,5 +1,7 @@
 # react-router-named-routes
 
+[![Build Status](https://travis-ci.org/adamziel/react-router-named-routes.svg?branch=master)](https://travis-ci.org/adamziel/react-router-named-routes)
+
 If you tried upgrading to React-Router 1.0.0, you probably realized that
 they deliberately removed support for named routes without any deprecations or
 grace period:
