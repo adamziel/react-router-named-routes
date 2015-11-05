@@ -96,6 +96,10 @@
         });
     };
 
+    NamedURLResolverClass.prototype.reset = function () {
+        this.routesMap = {};
+    };
+
     var NamedURLResolver = new NamedURLResolverClass();
     var Link = React.createClass({
         render: function render() {
@@ -104,8 +108,8 @@
 
             var rest = _objectWithoutProperties(_props, ['to']);
 
-            to = NamedURLResolver.resolve(to, this.props.params);
-            console.log('to is', to);
+            var resolver = this.props.resolver || NamedURLResolver;
+            to = resolver.resolve(to, this.props.params);
             return React.createElement(OriginalLink, _extends({
                 to: to
             }, rest));

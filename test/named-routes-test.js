@@ -1,14 +1,17 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-var ReactRouter = require('react-router');
 var ReactTestUtils = require('react-addons-test-utils');
+var ReactRouter = require('react-router');
+var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var IndexRoute = ReactRouter.IndexRoute;
 
 var ReactRouterNamedRoutes = require("../build/index");
 var NamedURLResolverClass = ReactRouterNamedRoutes.NamedURLResolverClass;
+var NamedURLResolver = ReactRouterNamedRoutes.NamedURLResolver;
 var Link = ReactRouterNamedRoutes.Link;
+var createBrowserHistory = require('history/lib/createBrowserHistory');
 
 var expect = require('chai').expect;
 
@@ -16,8 +19,8 @@ var Component = React.createClass({
     render: function() {}
 });
 
-var createComplexRouteTree = (resolver) => (
-    resolver.mergeRouteTree((
+var createComplexRouteTree = function() {
+    return (
         React.createElement(Route, {component: Component, name: 'root', path: '/'}, [
             React.createElement(Route, {component: Component, path: '/app'}, [
                 React.createElement(IndexRoute, {name: 'app.index'}),
@@ -31,8 +34,8 @@ var createComplexRouteTree = (resolver) => (
                 React.createElement(Route, {path: '/:id/edit'})
             ])
         ])
-    ))
-);
+    );
+};
 
 describe('NamedURLResolver', function() {
 
@@ -90,7 +93,7 @@ describe('NamedURLResolver', function() {
     });
 
     it('correctly maps route tree #4', function() {
-        resolver.mergeRouteTree(createComplexRouteTree(resolver));
+        resolver.mergeRouteTree(createComplexRouteTree());
         expect(resolver.routesMap).to.deep.equal({
             'root': '/',
             'app.index': '/app',
@@ -110,7 +113,7 @@ describe('NamedURLResolver', function() {
     });
 
     it('correctly resolve named routes', function() {
-        resolver.mergeRouteTree(createComplexRouteTree(resolver));
+        resolver.mergeRouteTree(createComplexRouteTree());
         expect(resolver.resolve("root")).to.equal("/");
         expect(resolver.resolve("app.index")).to.equal("/app");
         expect(resolver.resolve("app.list")).to.equal("/app");
@@ -142,10 +145,9 @@ describe('NamedURLResolver', function() {
 
 describe('Link', function() {
 
-    var resolver;
-    beforeEach(() => {
-        resolver = new NamedURLResolverClass();
-        resolver.mergeRouteTree(createComplexRouteTree(resolver));
+    afterEach(() => {
+        NamedURLResolver.reset();
+        // document.body.removeChild(document.body.children[0]);
     });
 
     function render(element, tag) {
@@ -156,15 +158,94 @@ describe('Link', function() {
             DOMComponent,
             tag
         );
-        return RenderedComponent.getDOMNode();
+        return RenderedComponent;
     };
 
-    it('correctly renders <Link /> element with named route', function() {
-        var a = render(React.createElement(Link, {to: 'users.list'}), 'a');
-        expect(a).to.be.ok;
+    it('correctly renders <Link /> elements', function() {
+        NamedURLResolver.mergeRouteTree(createComplexRouteTree());
 
-        console.log(a.getAttribute('href'));
-        expect(a.href).to.equal('/users/list');
+        var TestComponent = React.createClass({
+            render: function() {
+                return (
+                    React.createElement('div', {}, [
+                        React.createElement(Link, {to: 'root'}),
+                        React.createElement(Link, {to: 'app.index'}),
+                        React.createElement(Link, {to: 'app.list'}),
+                        React.createElement(Link, {to: 'users'}),
+                        React.createElement(Link, {to: 'users.index'}),
+                        React.createElement(Link, {to: 'users.list'}),
+                        React.createElement(Link, {to: 'users.show'}),
+                        React.createElement(Link, {to: 'users.show', params: {id: 4}}),
+                        React.createElement(Link, {to: 'users.show', params: {id: ':mal/ici/:ous'}}),
+
+                        React.createElement(Link, {to: '/some-unnamed-path'}),
+                        React.createElement(Link, {to: '/'}),
+                        React.createElement(Link, {to: '/users'}),
+                        React.createElement(Link, {to: '/users/5'})
+                    ])
+                )
+            }
+        });
+
+        var root = render(
+            React.createElement(Router, {}, [
+                React.createElement(Route, {path: '/', component: TestComponent})
+            ]),
+            'div'
+        );
+        expect(root).to.be.ok;
+
+        expect(root.children.length).to.equal(13);
+        var i = 0;
+        expect(root.children[i++].getAttribute('href')).to.equal('#/');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/app');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/app');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/users');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/users');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/users/list');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/users/:id');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/users/4');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/users/_mal_ici__ous');
+
+        expect(root.children[i++].getAttribute('href')).to.equal('#/some-unnamed-path');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/users');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/users/5');
+    });
+
+    it('correctly renders <Link /> elements with custom resolver', function() {
+        var resolver = new NamedURLResolverClass();
+        resolver.mergeRouteTree([
+            React.createElement(Route, {path: '/users/:id', name: 'users.show'}),
+            React.createElement(Route, {path: '/user/:id-parent/:id', name: 'test1'}),
+            React.createElement(Route, {path: '/user/semi:colon/:colon', name: 'test2'})
+        ]);
+
+        var TestComponent = React.createClass({
+            render: function() {
+                return (
+                    React.createElement('div', {}, [
+                        React.createElement(Link, {to: 'users.show', resolver: resolver}),
+                        React.createElement(Link, {to: 'test1', resolver: resolver}),
+                        React.createElement(Link, {to: 'test2', resolver: resolver})
+                    ])
+                )
+            }
+        });
+
+        var root = render(
+            React.createElement(Router, {}, [
+                React.createElement(Route, {path: '/', component: TestComponent})
+            ]),
+            'div'
+        );
+        expect(root).to.be.ok;
+
+        expect(root.children.length).to.equal(3);
+        var i = 0;
+        expect(root.children[i++].getAttribute('href')).to.equal('#/users/:id');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/user/:id-parent/:id');
+        expect(root.children[i++].getAttribute('href')).to.equal('#/user/semi:colon/:colon');
     });
 
 });
