@@ -41,7 +41,7 @@ That's it, you may now use react-router just like in react-router 0.13:
 <Link to="todo.edit" params={{id: 123}}>Edit</Link>
 ```
 
-## Doesn't like monkey-patching?
+## You don't like monkey-patching?
 
 You may just use `<Link />` component provided by this package instead
 of the one provided by `react-router`. This requires some refactoring but
