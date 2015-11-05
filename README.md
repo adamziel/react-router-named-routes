@@ -63,7 +63,7 @@ NamedURLResolver.mergeRouteTree(routes, "/");
 
 ## Caveats
 
-This probably breaks the shiny new `async routes` function introduced in ReactRouter `1.0.0`.
+This probably breaks the shiny new `async routes` feature introduced in ReactRouter `1.0.0`.
 If you come straight from 0.13 you don't use it anyway.
 
 ## Contributing
