@@ -92,7 +92,7 @@ setNamedURLResolver(new CustomURLResolver());
 Also, a `<Link />` component will accept a `resolver` property if you don't want to use
 a default one for any reason:
 
-`<Link resolver={new CustomURLResolver()} />``
+`<Link resolver={new CustomURLResolver()} />`
 
 ## License
 
