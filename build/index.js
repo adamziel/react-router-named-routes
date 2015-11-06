@@ -98,9 +98,9 @@
 
             if (route.props) {
                 var routePath = route.props.path || "";
-                var newPrefix = [prefix, routePath].filter(function (x) {
+                var newPrefix = (routePath != null && routePath[0] === "/" ? routePath : [prefix, routePath].filter(function (x) {
                     return x;
-                }).join("/").replace(reRepeatingSlashes, "/");
+                }).join("/")).replace(reRepeatingSlashes, "/");
 
                 if (route.props.name) {
                     _this2.routesMap[route.props.name] = newPrefix;
@@ -122,10 +122,11 @@
         render: function render() {
             var _props = this.props;
             var to = _props.to;
+            var resolver = _props.resolver;
 
-            var rest = _objectWithoutProperties(_props, ['to']);
+            var rest = _objectWithoutProperties(_props, ['to', 'resolver']);
 
-            var resolver = this.props.resolver || NamedURLResolver;
+            if (!resolver) resolver = NamedURLResolver;
             to = resolver.resolve(to, this.props.params);
             return React.createElement(OriginalLink, _extends({
                 to: to
@@ -134,7 +135,8 @@
     });
 
     function MonkeyPatchNamedRoutesSupport(routes) {
-        NamedURLResolver.mergeRouteTree(routes, "/");
+        var basename = arguments.length <= 1 || arguments[1] === undefined ? "/" : arguments[1];
+        NamedURLResolver.mergeRouteTree(routes, basename);
         ReactRouter.Link = Link;
     }
 
