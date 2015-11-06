@@ -29,9 +29,9 @@ var createComplexRouteTree = function() {
 
             React.createElement(Route, {name: 'users', path: '/users'}, [
                 React.createElement(IndexRoute, {name: 'users.index'}),
-                React.createElement(Route, {name: 'users.list', path: '/list'}),
-                React.createElement(Route, {name: 'users.show', path: '/:id'}),
-                React.createElement(Route, {path: '/:id/edit'})
+                React.createElement(Route, {name: 'users.list', path: 'list'}),
+                React.createElement(Route, {name: 'users.show', path: ':id'}),
+                React.createElement(Route, {path: ':id/edit'})
             ])
         ])
     );
@@ -104,6 +104,23 @@ describe('NamedURLResolver', function() {
             'users.list': '/users/list',
             'users.show': '/users/:id'
         });
+    });
+
+    it('correctly maps absolute paths for nested routes', function() {
+        resolver = new NamedURLResolverClass();
+        resolver.mergeRouteTree(
+            React.createElement(Route, { path: "/users" }, [
+                React.createElement(Route, {name: 'users.show', path: '/:id'}),
+                React.createElement(Route, {name: 'users.list', path: '/list'})
+            ])
+        );
+
+        expect(resolver.routesMap).to.deep.equal({
+            'users.show': '/:id',
+            'users.list': '/list'
+        });
+
+        expect(resolver.resolve("users.list")).to.equal("/list");
     });
 
     it('correctly escapes route parameters', function() {

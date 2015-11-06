@@ -73,9 +73,9 @@
 
             if (route.props) {
                 var routePath = route.props.path || "";
-                var newPrefix = [prefix, routePath].filter(function (x) {
+                var newPrefix = (routePath != null && routePath[0] === "/" ? routePath : [prefix, routePath].filter(function (x) {
                     return x;
-                }).join("/").replace(/\/+/g, "/");
+                }).join("/")).replace(/\/+/g, "/");
 
                 if (route.props.name) {
                     _this.routesMap[route.props.name] = newPrefix;
