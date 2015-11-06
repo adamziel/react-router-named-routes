@@ -36,7 +36,7 @@ var {FixNamedRoutesSupport} = require("react-router-named-routes");
 FixNamedRoutesSupport(routes);
 ```
 
-That's it, you may now use react-router just like in react-router 0.13:
+That's it, with three lines of code you saved yourself hours of refactoring! You may now use react-router just like in react-router 0.13:
 ```js
 <Route name="todo.edit" path="todo/:id/edit" component={TodoEditForm} />
 
@@ -45,7 +45,7 @@ That's it, you may now use react-router just like in react-router 0.13:
 
 ## You don't like monkey-patching?
 
-There is an alternative way of working with this package.
+There is an alternative way of working with this package if you don't like the previous example.
 You may just use `<Link />` component provided by this package instead
 of the one provided by `react-router`. This requires some refactoring but
 not that much:
