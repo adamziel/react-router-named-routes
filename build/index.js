@@ -80,12 +80,10 @@
                 if (route.props.name) {
                     _this.routesMap[route.props.name] = newPrefix;
                 }
-            }
 
-            var children = route.props.children || {};
-
-            for (var k in children) {
-                _this.mergeRouteTree(children[k], newPrefix);
+                React.Children.forEach(route.props.children, function (child) {
+                    _this.mergeRouteTree(child, newPrefix);
+                });
             }
         });
     };
