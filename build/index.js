@@ -97,10 +97,11 @@
         render: function render() {
             var _props = this.props;
             var to = _props.to;
+            var resolver = _props.resolver;
 
-            var rest = _objectWithoutProperties(_props, ['to']);
+            var rest = _objectWithoutProperties(_props, ['to', 'resolver']);
 
-            var resolver = this.props.resolver || NamedURLResolver;
+            if (!resolver) resolver = NamedURLResolver;
             to = resolver.resolve(to, this.props.params);
             return React.createElement(OriginalLink, _extends({
                 to: to
