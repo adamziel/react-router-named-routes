@@ -28,45 +28,70 @@
         this.escapeSequences = [[/:/g, '_'], [/\//g, '_']];
     }
 
+    function toArray(val) {
+        return Object.prototype.toString.call(val) !== '[object Array]' ? [val] : val;
+    }
+
+    var reRepeatingSlashes = /\/+/g;
+    var reSplatParams = /\*{1,2}/g;
+    var reResolvedOptionalParams = /\(([^:*?#]+?)\)/g;
+    var reUnresolvedOptionalParams = /\([^:?#]*:[^?#]*?\)/g;
+
     NamedURLResolverClass.prototype.escape = function (string) {
+        var escapeSlashes = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
         if (string === undefined) {
             return "";
         }
 
-        this.escapeSequences.forEach(function (fromto) {
-            string = string.replace(fromto[0], fromto[1]);
+        this.escapeSequences.forEach(function (fromto, idx) {
+            if (!(idx === 1 && !escapeSlashes)) {
+                string = string.replace(fromto[0], fromto[1]);
+            }
         });
         return string;
     };
 
     NamedURLResolverClass.prototype.resolve = function (name, params) {
+        var _this = this;
+
         if (name && name in this.routesMap) {
-            if (!params) params = {};
             var routePath = this.routesMap[name];
+
+            if (!params) {
+                return routePath;
+            }
 
             for (var paramName in params) {
                 if (params.hasOwnProperty(paramName)) {
-                    var paramRegex = new RegExp('(/|^):' + paramName + '(/|$)');
-                    var paramValue = this.escape('' + params[paramName]);
-                    routePath = routePath.replace(paramRegex, '$1' + paramValue + '$2');
+                    var paramValue = params[paramName];
+
+                    if (paramName === "splat") {
+                        paramValue = toArray(paramValue);
+                        var i = 0;
+                        routePath = routePath.replace(reSplatParams, function (match) {
+                            var val = paramValue[i++];
+                            return val == null ? "" : _this.escape('' + val, match === "*");
+                        });
+                    } else {
+                        var paramRegex = new RegExp('(\/|\\(|\\)|^):' + paramName + '(\/|\\)|\\(|$)');
+                        var replacement = '$1' + this.escape('' + paramValue) + '$2';
+                        routePath = routePath.replace(paramRegex, replacement);
+                    }
                 }
             }
 
-            return routePath;
+            return routePath.replace(reResolvedOptionalParams, "$1").replace(reUnresolvedOptionalParams, "").replace(reRepeatingSlashes, "/");
         }
 
         return name;
     };
 
     NamedURLResolverClass.prototype.mergeRouteTree = function (routes) {
-        var _this = this;
+        var _this2 = this;
 
         var prefix = arguments.length <= 1 || arguments[1] === undefined ? "" : arguments[1];
-
-        if (Object.prototype.toString.call(routes) !== '[object Array]') {
-            routes = [routes];
-        }
-
+        routes = toArray(routes);
         routes.forEach(function (route) {
             if (!route) return;
             var newPrefix = "";
@@ -75,14 +100,14 @@
                 var routePath = route.props.path || "";
                 var newPrefix = [prefix, routePath].filter(function (x) {
                     return x;
-                }).join("/").replace(/\/+/g, "/");
+                }).join("/").replace(reRepeatingSlashes, "/");
 
                 if (route.props.name) {
-                    _this.routesMap[route.props.name] = newPrefix;
+                    _this2.routesMap[route.props.name] = newPrefix;
                 }
 
                 React.Children.forEach(route.props.children, function (child) {
-                    _this.mergeRouteTree(child, newPrefix);
+                    _this2.mergeRouteTree(child, newPrefix);
                 });
             }
         });
