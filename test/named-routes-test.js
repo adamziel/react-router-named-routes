@@ -273,7 +273,7 @@ describe('Link', function() {
         expect(root.children[i++].getAttribute('href')).to.equal('/users/list');
         expect(root.children[i++].getAttribute('href')).to.equal('/users/:id');
         expect(root.children[i++].getAttribute('href')).to.equal('/users/4');
-        expect(root.children[i++].getAttribute('href')).to.equal('/users/_mal_ici__ous');
+        expect(root.children[i++].getAttribute('href')).to.equal('/users/' + encodeURIComponent(':mal/ici/:ous'));
 
         expect(root.children[i++].getAttribute('href')).to.equal('/some-unnamed-path');
         expect(root.children[i++].getAttribute('href')).to.equal('/');
