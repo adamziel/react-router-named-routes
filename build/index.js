@@ -25,34 +25,60 @@
 
     function NamedURLResolverClass() {
         this.routesMap = {};
-        this.escapeSequences = [[/:/g, '_'], [/\//g, '_']];
     }
 
-    NamedURLResolverClass.prototype.escape = function (string) {
-        if (string === undefined) {
-            return "";
-        }
+    function toArray(val) {
+        return Object.prototype.toString.call(val) !== '[object Array]' ? [val] : val;
+    }
 
-        this.escapeSequences.forEach(function (fromto) {
-            string = string.replace(fromto[0], fromto[1]);
-        });
-        return string;
-    };
+    var reRepeatingSlashes = /\/+/g;
+    var reSplatParams = /\*{1,2}/g;
+    var reResolvedOptionalParams = /\(([^:*?#]+?)\)/g;
+    var reUnresolvedOptionalParams = /\([^:?#]*:[^?#]*?\)/g;
+    var reTokens = /<(.*?)>/g;
+    var reSlashTokens = /_!slash!_/g;
 
     NamedURLResolverClass.prototype.resolve = function (name, params) {
         if (name && name in this.routesMap) {
-            if (!params) params = {};
             var routePath = this.routesMap[name];
+
+            if (!params) {
+                return routePath;
+            }
+
+            var tokens = {};
 
             for (var paramName in params) {
                 if (params.hasOwnProperty(paramName)) {
-                    var paramRegex = new RegExp('(/|^):' + paramName + '(/|$)');
-                    var paramValue = this.escape('' + params[paramName]);
-                    routePath = routePath.replace(paramRegex, '$1' + paramValue + '$2');
+                    var paramValue = params[paramName];
+
+                    if (paramName === "splat") {
+                        paramValue = toArray(paramValue);
+                        var i = 0;
+                        routePath = routePath.replace(reSplatParams, function (match) {
+                            var val = paramValue[i++];
+
+                            if (val == null) {
+                                return "";
+                            } else {
+                                var tokenName = 'splat' + i;
+                                tokens[tokenName] = match === "*" ? encodeURIComponent(val) : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
+                                return '<' + tokenName + '>';
+                            }
+                        });
+                    } else {
+                        var paramRegex = new RegExp('(\/|\\(|\\)|^):' + paramName + '(\/|\\)|\\(|$)');
+                        routePath = routePath.replace(paramRegex, function (match, g1, g2) {
+                            tokens[paramName] = encodeURIComponent(paramValue);
+                            return g1 + '<' + paramName + '>' + g2;
+                        });
+                    }
                 }
             }
 
-            return routePath;
+            return routePath.replace(reResolvedOptionalParams, "$1").replace(reUnresolvedOptionalParams, "").replace(reTokens, function (match, token) {
+                return tokens[token];
+            }).replace(reRepeatingSlashes, "/");
         }
 
         return name;
@@ -62,11 +88,7 @@
         var _this = this;
 
         var prefix = arguments.length <= 1 || arguments[1] === undefined ? "" : arguments[1];
-
-        if (Object.prototype.toString.call(routes) !== '[object Array]') {
-            routes = [routes];
-        }
-
+        routes = toArray(routes);
         routes.forEach(function (route) {
             if (!route) return;
             var newPrefix = "";
@@ -75,7 +97,7 @@
                 var routePath = route.props.path || "";
                 var newPrefix = (routePath != null && routePath[0] === "/" ? routePath : [prefix, routePath].filter(function (x) {
                     return x;
-                }).join("/")).replace(/\/+/g, "/");
+                }).join("/")).replace(reRepeatingSlashes, "/");
 
                 if (route.props.name) {
                     _this.routesMap[route.props.name] = newPrefix;
@@ -110,7 +132,8 @@
     });
 
     function MonkeyPatchNamedRoutesSupport(routes) {
-        NamedURLResolver.mergeRouteTree(routes, "/");
+        var basename = arguments.length <= 1 || arguments[1] === undefined ? "/" : arguments[1];
+        NamedURLResolver.mergeRouteTree(routes, basename);
         ReactRouter.Link = Link;
     }
 
