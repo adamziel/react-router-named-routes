@@ -36,7 +36,7 @@
     var reResolvedOptionalParams = /\(([^:*?#]+?)\)/g;
     var reUnresolvedOptionalParams = /\([^:?#]*:[^?#]*?\)/g;
     var reTokens = /<(.*?)>/g;
-    var reSlashTokens = /!@slash@!/g;
+    var reSlashTokens = /_!slash!_/g;
 
     NamedURLResolverClass.prototype.resolve = function (name, params) {
         if (name && name in this.routesMap) {
@@ -62,7 +62,7 @@
                                 return "";
                             } else {
                                 var tokenName = 'splat' + i;
-                                tokens[tokenName] = match === "*" ? encodeURIComponent(val) : encodeURIComponent(val.toString().replace(/\//g, "!@slash@!")).replace(reSlashTokens, "/");
+                                tokens[tokenName] = match === "*" ? encodeURIComponent(val) : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
                                 return '<' + tokenName + '>';
                             }
                         });
