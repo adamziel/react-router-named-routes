@@ -123,12 +123,6 @@ describe('NamedURLResolver', function() {
         expect(resolver.resolve("users.list")).to.equal("/list");
     });
 
-    it('correctly escapes route parameters', function() {
-        expect(resolver.escape(':abc')).to.equal('_abc');
-        expect(resolver.escape(':abc/:zxd')).to.equal('_abc__zxd');
-        expect(resolver.escape(undefined)).to.equal("");
-    });
-
     it('correctly resolve named routes', function() {
         resolver.mergeRouteTree(createComplexRouteTree());
         expect(resolver.resolve("root")).to.equal("/");
@@ -152,9 +146,9 @@ describe('NamedURLResolver', function() {
         expect(resolver.resolve("test1", {id: 4, 'id-parent': 5})).to.equal("/users/5/4");
         expect(resolver.resolve("test2", {colon: 7})).to.equal("/users/semi:colon/7");
 
-        expect(resolver.resolve("users.show", {id: 'id/:id'})).to.equal("/users/id__id");
-        expect(resolver.resolve("test1", {id: 'id/:id', 'id-parent': 'idp:id'})).to.equal("/users/idp_id/id__id");
-        expect(resolver.resolve("test2", {colon: 'colon:colon'})).to.equal("/users/semi:colon/colon_colon");
+        expect(resolver.resolve("users.show", {id: 'id/:id'})).to.equal("/users/" + encodeURIComponent("id/:id"));
+        expect(resolver.resolve("test1", {id: 'id/:id', 'id-parent': 'idp:id'})).to.equal("/users/" + encodeURIComponent("idp:id") + "/" + encodeURIComponent("id/:id"));
+        expect(resolver.resolve("test2", {colon: 'colon:colon'})).to.equal("/users/semi:colon/" + encodeURIComponent("colon:colon"));
     });
 
     it('correctly resolves optional params', function () {
@@ -183,6 +177,8 @@ describe('NamedURLResolver', function() {
 
         expect(resolver.resolve("test7", {param1: 1})).to.equal("/path/1/", "Trailing omit case 1");
         expect(resolver.resolve("test8", {param1: 1})).to.equal("/path/1", "Trailing omit case 2");
+        
+        expect(resolver.resolve("test8", {param1: "p(1)", param2: "p(2)"})).to.equal("/path/p(1)/p(2)", "Params with parentheses");
 
         // if any part of optional sequence is omitted, entire sequence is omitted
         expect(resolver.resolve("test9", {param1: 1})).to.equal("/path", "Omitted sequence");
@@ -202,14 +198,14 @@ describe('NamedURLResolver', function() {
 
         expect(resolver.resolve("test1", {splat: 1})).to.equal("/some/1", "Trailing single star");
         expect(resolver.resolve("test2", {splat: 1})).to.equal("/some/1/path", "Middle single star");
-        expect(resolver.resolve("test1", {splat: "slash/here"})).to.equal("/some/slash_here", "Slash with single star");
+        expect(resolver.resolve("test1", {splat: "slash/here"})).to.equal("/some/" + encodeURIComponent("slash/here"), "Slash with single star");
 
         expect(resolver.resolve("test3", {splat: 1})).to.equal("/some/1", "Trailing double star");
         expect(resolver.resolve("test4", {splat: 1})).to.equal("/some/1/path", "Middle double star");
         expect(resolver.resolve("test3", {splat: "slash/here"})).to.equal("/some/slash/here", "Slash with double star");
         
-        expect(resolver.resolve("test5", {splat: "first/splat"})).to.equal("/some/first_splat/path/", "Multiple globs 1");
-        expect(resolver.resolve("test5", {splat: ["first/splat", "second/splat"]})).to.equal("/some/first_splat/path/second/splat", "Multiple globs 2");
+        expect(resolver.resolve("test5", {splat: "first/splat"})).to.equal("/some/" + encodeURIComponent("first/splat") + "/path/", "Multiple globs 1");
+        expect(resolver.resolve("test5", {splat: ["first/splat", "second/splat"]})).to.equal("/some/" + encodeURIComponent("first/splat") + "/path/second/splat", "Multiple globs 2");
 
     });
 });

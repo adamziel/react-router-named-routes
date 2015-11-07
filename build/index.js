@@ -25,7 +25,6 @@
 
     function NamedURLResolverClass() {
         this.routesMap = {};
-        this.escapeSequences = [[/:/g, '_'], [/\//g, '_']];
     }
 
     function toArray(val) {
@@ -36,31 +35,18 @@
     var reSplatParams = /\*{1,2}/g;
     var reResolvedOptionalParams = /\(([^:*?#]+?)\)/g;
     var reUnresolvedOptionalParams = /\([^:?#]*:[^?#]*?\)/g;
-
-    NamedURLResolverClass.prototype.escape = function (string) {
-        var escapeSlashes = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
-
-        if (string === undefined) {
-            return "";
-        }
-
-        this.escapeSequences.forEach(function (fromto, idx) {
-            if (!(idx === 1 && !escapeSlashes)) {
-                string = string.replace(fromto[0], fromto[1]);
-            }
-        });
-        return string;
-    };
+    var reTokens = /<(.*?)>/g;
+    var reSlashTokens = /!@slash@!/g;
 
     NamedURLResolverClass.prototype.resolve = function (name, params) {
-        var _this = this;
-
         if (name && name in this.routesMap) {
             var routePath = this.routesMap[name];
 
             if (!params) {
                 return routePath;
             }
+
+            var tokens = {};
 
             for (var paramName in params) {
                 if (params.hasOwnProperty(paramName)) {
@@ -71,24 +57,35 @@
                         var i = 0;
                         routePath = routePath.replace(reSplatParams, function (match) {
                             var val = paramValue[i++];
-                            return val == null ? "" : _this.escape('' + val, match === "*");
+
+                            if (val == null) {
+                                return "";
+                            } else {
+                                var tokenName = 'splat' + i;
+                                tokens[tokenName] = match === "*" ? encodeURIComponent(val) : encodeURIComponent(val.toString().replace(/\//g, "!@slash@!")).replace(reSlashTokens, "/");
+                                return '<' + tokenName + '>';
+                            }
                         });
                     } else {
                         var paramRegex = new RegExp('(\/|\\(|\\)|^):' + paramName + '(\/|\\)|\\(|$)');
-                        var replacement = '$1' + this.escape('' + paramValue) + '$2';
-                        routePath = routePath.replace(paramRegex, replacement);
+                        routePath = routePath.replace(paramRegex, function (match, g1, g2) {
+                            tokens[paramName] = encodeURIComponent(paramValue);
+                            return g1 + '<' + paramName + '>' + g2;
+                        });
                     }
                 }
             }
 
-            return routePath.replace(reResolvedOptionalParams, "$1").replace(reUnresolvedOptionalParams, "").replace(reRepeatingSlashes, "/");
+            return routePath.replace(reResolvedOptionalParams, "$1").replace(reUnresolvedOptionalParams, "").replace(reTokens, function (match, token) {
+                return tokens[token];
+            }).replace(reRepeatingSlashes, "/");
         }
 
         return name;
     };
 
     NamedURLResolverClass.prototype.mergeRouteTree = function (routes) {
-        var _this2 = this;
+        var _this = this;
 
         var prefix = arguments.length <= 1 || arguments[1] === undefined ? "" : arguments[1];
         routes = toArray(routes);
@@ -103,11 +100,11 @@
                 }).join("/")).replace(reRepeatingSlashes, "/");
 
                 if (route.props.name) {
-                    _this2.routesMap[route.props.name] = newPrefix;
+                    _this.routesMap[route.props.name] = newPrefix;
                 }
 
                 React.Children.forEach(route.props.children, function (child) {
-                    _this2.mergeRouteTree(child, newPrefix);
+                    _this.mergeRouteTree(child, newPrefix);
                 });
             }
         });
