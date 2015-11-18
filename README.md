@@ -74,7 +74,7 @@ time, starring this repo is a nice way to say "thank you".
 
 ## Advanced stuff and implementation details
 
-Named Routes are resolved by a simple class (60 lines of code) called `NamedURLResolverClass`.
+Named Routes are resolved by a simple class called `NamedURLResolverClass`.
 
 If you want some custom logic involved in resolving your named routes, or routes in general,
 you may extend the class `NamedURLResolverClass` from this package and replace the global resolver
