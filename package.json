@@ -7,9 +7,7 @@
   "bugs": {
     "url": "https://github.com/adamziel/react-router-named-routes/issues"
   },
-  "dependencies": {
-    "react-router": "^1.0.0-rc3"
-  },
+  "dependencies": {},
   "description": "Adds support for named routes to React-Router 1.0.0",
   "devDependencies": {
     "babel": "^6.0.15",
@@ -33,7 +31,7 @@
     "react": "^0.14.2",
     "react-addons-test-utils": "^0.14.2",
     "react-dom": "^0.14.2",
-    "react-router": "^1.0.0-rc3",
+    "react-router": "^1.0.0",
     "sessionstorage": "0.0.1",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.1"
@@ -46,6 +44,9 @@
   "main": "./build/index.js",
   "name": "react-router-named-routes",
   "optionalDependencies": {},
+  "peerDependencies": {
+    "react-router": "^1.0.0"
+  },
   "readmeFilename": "README.md",
   "repository": {
     "type": "git",
