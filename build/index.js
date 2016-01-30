@@ -151,4 +151,5 @@
     exports.MonkeyPatchNamedRoutesSupport = MonkeyPatchNamedRoutesSupport;
     exports.FixNamedRoutesSupport = MonkeyPatchNamedRoutesSupport;
     exports.setNamedURLResolver = setNamedURLResolver;
+    exports.resolve = NamedURLResolver.resolve
 });
