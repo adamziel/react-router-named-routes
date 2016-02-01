@@ -22,7 +22,7 @@
     "babel-preset-stage-3": "^6.0.15",
     "babel-runtime": "^6.0.14",
     "chai": "^3.4.0",
-    "history": "^1.13.0",
+    "history": "^1.17.0",
     "jsdom": "^7.0.2",
     "mocha": "^2.3.3",
     "mocha-babel": "^3.0.0",
@@ -31,7 +31,7 @@
     "react": "^0.14.2",
     "react-addons-test-utils": "^0.14.2",
     "react-dom": "^0.14.2",
-    "react-router": "^1.0.0",
+    "react-router": "2.0.0-rc5",
     "sessionstorage": "0.0.1",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.1"
@@ -45,7 +45,7 @@
   "name": "react-router-named-routes",
   "optionalDependencies": {},
   "peerDependencies": {
-    "react-router": "^1.0.0"
+    "react-router": "2.0.0-rc5"
   },
   "readmeFilename": "README.md",
   "repository": {
