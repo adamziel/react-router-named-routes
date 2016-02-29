@@ -45,7 +45,7 @@
   "name": "react-router-named-routes",
   "optionalDependencies": {},
   "peerDependencies": {
-    "react-router": "2.0.0"
+    "react-router": "^2.0.0"
   },
   "readmeFilename": "README.md",
   "repository": {
