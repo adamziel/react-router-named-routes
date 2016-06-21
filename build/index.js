@@ -42,36 +42,34 @@
         if (name && name in this.routesMap) {
             var routePath = this.routesMap[name];
 
-            if (!params) {
-                return routePath;
-            }
+            if (params) {
+                var tokens = {};
 
-            var tokens = {};
+                for (var paramName in params) {
+                    if (params.hasOwnProperty(paramName)) {
+                        var paramValue = params[paramName];
 
-            for (var paramName in params) {
-                if (params.hasOwnProperty(paramName)) {
-                    var paramValue = params[paramName];
+                        if (paramName === "splat") {
+                            paramValue = toArray(paramValue);
+                            var i = 0;
+                            routePath = routePath.replace(reSplatParams, function (match) {
+                                var val = paramValue[i++];
 
-                    if (paramName === "splat") {
-                        paramValue = toArray(paramValue);
-                        var i = 0;
-                        routePath = routePath.replace(reSplatParams, function (match) {
-                            var val = paramValue[i++];
-
-                            if (val == null) {
-                                return "";
-                            } else {
-                                var tokenName = 'splat' + i;
-                                tokens[tokenName] = match === "*" ? encodeURIComponent(val) : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
-                                return '<' + tokenName + '>';
-                            }
-                        });
-                    } else {
-                        var paramRegex = new RegExp('(\/|\\(|\\)|^):' + paramName + '(\/|\\)|\\(|$)');
-                        routePath = routePath.replace(paramRegex, function (match, g1, g2) {
-                            tokens[paramName] = encodeURIComponent(paramValue);
-                            return g1 + '<' + paramName + '>' + g2;
-                        });
+                                if (val == null) {
+                                    return "";
+                                } else {
+                                    var tokenName = 'splat' + i;
+                                    tokens[tokenName] = match === "*" ? encodeURIComponent(val) : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
+                                    return '<' + tokenName + '>';
+                                }
+                            });
+                        } else {
+                            var paramRegex = new RegExp('(\/|\\(|\\)|^):' + paramName + '(\/|\\)|\\(|$)');
+                            routePath = routePath.replace(paramRegex, function (match, g1, g2) {
+                                tokens[paramName] = encodeURIComponent(paramValue);
+                                return g1 + '<' + paramName + '>' + g2;
+                            });
+                        }
                     }
                 }
             }
