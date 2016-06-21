@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/adamziel/react-router-named-routes.svg?branch=master)](https://travis-ci.org/adamziel/react-router-named-routes)
 
-If you tried upgrading to React-Router 1.0.0, you probably realized that
+If you tried upgrading to React-Router 1.0.0 or 2.0.0, you probably realized that
 they deliberately removed support for named routes without any deprecations or
 grace period:
 
@@ -74,7 +74,7 @@ time, starring this repo is a nice way to say "thank you".
 
 ## Advanced stuff and implementation details
 
-Named Routes are resolved by a simple class (60 lines of code) called `NamedURLResolverClass`.
+Named Routes are resolved by a simple class called `NamedURLResolverClass`.
 
 If you want some custom logic involved in resolving your named routes, or routes in general,
 you may extend the class `NamedURLResolverClass` from this package and replace the global resolver
