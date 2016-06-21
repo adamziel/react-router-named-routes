@@ -1,3 +1,5 @@
+'use strict';
+
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
         define(['exports', 'react', 'react-router'], factory);
@@ -11,37 +13,13 @@
         global.index = mod.exports;
     }
 })(this, function (exports, React, ReactRouter) {
-    'use strict';
-
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
 
-    var _extends = Object.assign || function (target) {
-        for (var i = 1; i < arguments.length; i++) {
-            var source = arguments[i];
+    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-            for (var key in source) {
-                if (Object.prototype.hasOwnProperty.call(source, key)) {
-                    target[key] = source[key];
-                }
-            }
-        }
-
-        return target;
-    };
-
-    function _objectWithoutProperties(obj, keys) {
-        var target = {};
-
-        for (var i in obj) {
-            if (keys.indexOf(i) >= 0) continue;
-            if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-            target[i] = obj[i];
-        }
-
-        return target;
-    }
+    function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
     var OriginalLink = ReactRouter.Link;
 
@@ -136,7 +114,6 @@
 
     var NamedURLResolver = new NamedURLResolverClass();
     var Link = React.createClass({
-        displayName: 'Link',
         render: function render() {
             var _props = this.props;
             var to = _props.to;

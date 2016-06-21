@@ -167,6 +167,9 @@ describe('NamedURLResolver', function() {
             React.createElement(Route, {name: 'test9', path: '/path(/:param1/:param2/)'}),
         ]);
 
+        expect(resolver.resolve("test1", { param: 1 })).to.equal("/path/1", "Substitute case 1");
+        expect(resolver.resolve("test2", { param: 1 })).to.equal("/path/1", "Substitute case 2");
+
         expect(resolver.resolve("test1")).to.equal("/path", "Simple omit case 1");
         expect(resolver.resolve("test2")).to.equal("/path", "Simple omit case 2");
 
