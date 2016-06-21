@@ -1,3 +1,5 @@
+'use strict';
+
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
         define(['exports', 'react', 'react-router'], factory);
@@ -11,37 +13,13 @@
         global.index = mod.exports;
     }
 })(this, function (exports, React, ReactRouter) {
-    'use strict';
-
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
 
-    var _extends = Object.assign || function (target) {
-        for (var i = 1; i < arguments.length; i++) {
-            var source = arguments[i];
+    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-            for (var key in source) {
-                if (Object.prototype.hasOwnProperty.call(source, key)) {
-                    target[key] = source[key];
-                }
-            }
-        }
-
-        return target;
-    };
-
-    function _objectWithoutProperties(obj, keys) {
-        var target = {};
-
-        for (var i in obj) {
-            if (keys.indexOf(i) >= 0) continue;
-            if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-            target[i] = obj[i];
-        }
-
-        return target;
-    }
+    function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
     var OriginalLink = ReactRouter.Link;
 
@@ -64,43 +42,41 @@
         if (name && name in this.routesMap) {
             var routePath = this.routesMap[name];
 
-            if (!params) {
-                return routePath;
-            }
+            if (params) {
+                var tokens = {};
 
-            var tokens = {};
+                for (var paramName in params) {
+                    if (params.hasOwnProperty(paramName)) {
+                        var paramValue = params[paramName];
 
-            for (var paramName in params) {
-                if (params.hasOwnProperty(paramName)) {
-                    var paramValue = params[paramName];
+                        if (paramName === "splat") {
+                            paramValue = toArray(paramValue);
+                            var i = 0;
+                            routePath = routePath.replace(reSplatParams, function (match) {
+                                var val = paramValue[i++];
 
-                    if (paramName === "splat") {
-                        paramValue = toArray(paramValue);
-                        var i = 0;
-                        routePath = routePath.replace(reSplatParams, function (match) {
-                            var val = paramValue[i++];
-
-                            if (val == null) {
-                                return "";
-                            } else {
-                                var tokenName = 'splat' + i;
-                                tokens[tokenName] = match === "*" ? encodeURIComponent(val) : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
-                                return '<' + tokenName + '>';
-                            }
-                        });
-                    } else {
-                        var paramRegex = new RegExp('(\/|\\(|\\)|^):' + paramName + '(\/|\\)|\\(|$)');
-                        routePath = routePath.replace(paramRegex, function (match, g1, g2) {
-                            tokens[paramName] = encodeURIComponent(paramValue);
-                            return g1 + '<' + paramName + '>' + g2;
-                        });
+                                if (val == null) {
+                                    return "";
+                                } else {
+                                    var tokenName = 'splat' + i;
+                                    tokens[tokenName] = match === "*" ? encodeURIComponent(val) : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
+                                    return '<' + tokenName + '>';
+                                }
+                            });
+                        } else {
+                            var paramRegex = new RegExp('(\/|\\(|\\)|^):' + paramName + '(\/|\\)|\\(|$)');
+                            routePath = routePath.replace(paramRegex, function (match, g1, g2) {
+                                tokens[paramName] = encodeURIComponent(paramValue);
+                                return g1 + '<' + paramName + '>' + g2;
+                            });
+                        }
                     }
                 }
             }
 
             return routePath.replace(reResolvedOptionalParams, "$1").replace(reUnresolvedOptionalParams, "").replace(reTokens, function (match, token) {
                 return tokens[token];
-            }).replace(reRepeatingSlashes, "/");
+            }).replace(reRepeatingSlashes, "/").replace(/\/+$/, "").replace(/^$/, "/");
         }
 
         return name;
@@ -138,7 +114,6 @@
 
     var NamedURLResolver = new NamedURLResolverClass();
     var Link = React.createClass({
-        displayName: 'Link',
         render: function render() {
             var _props = this.props;
             var to = _props.to;
