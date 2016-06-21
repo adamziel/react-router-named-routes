@@ -76,7 +76,7 @@
 
             return routePath.replace(reResolvedOptionalParams, "$1").replace(reUnresolvedOptionalParams, "").replace(reTokens, function (match, token) {
                 return tokens[token];
-            }).replace(reRepeatingSlashes, "/");
+            }).replace(reRepeatingSlashes, "/").replace(/\/+$/, "").replace(/^$/, "/");
         }
 
         return name;

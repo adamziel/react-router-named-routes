@@ -168,21 +168,21 @@ describe('NamedURLResolver', function() {
         ]);
 
         expect(resolver.resolve("test1")).to.equal("/path", "Simple omit case 1");
-        expect(resolver.resolve("test2")).to.equal("/path/", "Simple omit case 2");
+        expect(resolver.resolve("test2")).to.equal("/path", "Simple omit case 2");
 
         expect(resolver.resolve("test3", {param2: 2})).to.equal("/path/2", "Middle omit case 1");
         expect(resolver.resolve("test4", {param2: 2})).to.equal("/path/2", "Middle omit case 2");
         expect(resolver.resolve("test5", {param2: 2})).to.equal("/path2", "Middle omit case 3");
         expect(resolver.resolve("test6", {param2: 2})).to.equal("/path/2", "Middle omit case 4");
 
-        expect(resolver.resolve("test7", {param1: 1})).to.equal("/path/1/", "Trailing omit case 1");
+        expect(resolver.resolve("test7", {param1: 1})).to.equal("/path/1", "Trailing omit case 1");
         expect(resolver.resolve("test8", {param1: 1})).to.equal("/path/1", "Trailing omit case 2");
         
         expect(resolver.resolve("test8", {param1: "p(1)", param2: "p(2)"})).to.equal("/path/p(1)/p(2)", "Params with parentheses");
 
         // if any part of optional sequence is omitted, entire sequence is omitted
         expect(resolver.resolve("test9", {param1: 1})).to.equal("/path", "Omitted sequence");
-        expect(resolver.resolve("test9", {param1: 1, param2:2})).to.equal("/path/1/2/", "Resolved sequence");
+        expect(resolver.resolve("test9", {param1: 1, param2:2})).to.equal("/path/1/2", "Resolved sequence");
     });
 
     it('correctly resolves splat params', function() {
@@ -204,7 +204,7 @@ describe('NamedURLResolver', function() {
         expect(resolver.resolve("test4", {splat: 1})).to.equal("/some/1/path", "Middle double star");
         expect(resolver.resolve("test3", {splat: "slash/here"})).to.equal("/some/slash/here", "Slash with double star");
         
-        expect(resolver.resolve("test5", {splat: "first/splat"})).to.equal("/some/" + encodeURIComponent("first/splat") + "/path/", "Multiple globs 1");
+        expect(resolver.resolve("test5", {splat: "first/splat"})).to.equal("/some/" + encodeURIComponent("first/splat") + "/path", "Multiple globs 1");
         expect(resolver.resolve("test5", {splat: ["first/splat", "second/splat"]})).to.equal("/some/" + encodeURIComponent("first/splat") + "/path/second/splat", "Multiple globs 2");
 
     });
