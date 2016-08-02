@@ -118,11 +118,12 @@
             var _props = this.props;
             var to = _props.to;
             var resolver = _props.resolver;
+            var params = _props.params;
 
-            var rest = _objectWithoutProperties(_props, ['to', 'resolver']);
+            var rest = _objectWithoutProperties(_props, ['to', 'resolver', 'params']);
 
             if (!resolver) resolver = NamedURLResolver;
-            to = resolver.resolve(to, this.props.params);
+            to = resolver.resolve(to, params);
             return React.createElement(OriginalLink, _extends({
                 to: to
             }, rest));
