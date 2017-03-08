@@ -11,7 +11,7 @@ var ReactRouterNamedRoutes = require("../build/index");
 var NamedURLResolverClass = ReactRouterNamedRoutes.NamedURLResolverClass;
 var NamedURLResolver = ReactRouterNamedRoutes.NamedURLResolver;
 var Link = ReactRouterNamedRoutes.Link;
-var createBrowserHistory = require('history/lib/createBrowserHistory');
+var createBrowserHistory = require('history/lib/createBrowserHistory').default;
 
 var expect = require('chai').expect;
 
