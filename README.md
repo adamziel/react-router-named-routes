@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/adamziel/react-router-named-routes.svg?branch=master)](https://travis-ci.org/adamziel/react-router-named-routes)
 
-If you tried upgrading to React-Router 1.0.0 or 2.0.0, you probably realized that
+If you tried upgrading to React-Router 1, 2, or 3, you probably realized that
 they deliberately removed support for named routes without any deprecations or
 grace period:
 
@@ -25,7 +25,7 @@ this package.
 
 `npm install react-router-named-routes`
 
-## Usage
+## Usage before 3.0
 
 1. Define all your routes in a single module. You probably do it like this anyway.
 1. Use this package before you `render()` anything:
@@ -43,9 +43,9 @@ That's it, with three lines of code you saved yourself hours of refactoring! You
 <Link to="todo.edit" params={{id: 123}}>Edit</Link>
 ```
 
-## You don't like monkey-patching?
+## React-router 3.0+
 
-There is an alternative way of working with this package if you don't like the previous example.
+There is an alternative way of working with this package.
 You may just use `<Link />` component provided by this package instead
 of the one provided by `react-router`. This requires some refactoring but
 not that much:

@@ -7,7 +7,10 @@
   "bugs": {
     "url": "https://github.com/adamziel/react-router-named-routes/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "history": "^2.1.2",
+    "use-named-routes": "^0.3.2"
+  },
   "description": "Adds support for named routes to React-Router 1.0.0",
   "devDependencies": {
     "babel": "^6.0.15",
@@ -31,7 +34,7 @@
     "react": "^0.14.2",
     "react-addons-test-utils": "^0.14.2",
     "react-dom": "^0.14.2",
-    "react-router": "^2.0.0",
+    "react-router": "^3.0.0",
     "sessionstorage": "0.0.1",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.1"
@@ -57,5 +60,5 @@
     "test-browser": "echo 'open http://localhost:8080/webpack-dev-server/test'; webpack-dev-server 'mocha!./test/named-routes-test.js' --output-filename test.js",
     "build": "node_modules/.bin/babel --presets react,es2015,stage-0,stage-1,stage-2,stage-3 lib/index.js --out-file build/index.js"
   },
-  "version": "0.0.12"
+  "version": "0.0.13"
 }
