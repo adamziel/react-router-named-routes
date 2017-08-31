@@ -43,7 +43,7 @@ That's it, with three lines of code you saved yourself hours of refactoring! You
 <Link to="todo.edit" params={{id: 123}}>Edit</Link>
 ```
 
-## React-router 3.0+
+## React-router 3.0
 
 There is an alternative way of working with this package.
 You may just use `<Link />` component provided by this package instead
@@ -61,6 +61,27 @@ NamedURLResolver.mergeRouteTree(routes, "/");
 <Route name="todo.edit" path="todo/:id/edit" component={TodoEditForm} />
 <Link to="todo.edit" params={{id: 123}}>Edit</Link>
 ```
+
+## React-router 4.0+
+
+React-router v4 changed the game (again). We no longer have a single config file with all `<Route/>` components inside - and because of that we cannot map all routing patterns to resolve them based on their name. Unfortunately there is no easy way around this, so this package does not support react-router v4 at all. What you could do, is express all your routes in a single file using constants, like this:
+
+routes.js:
+```javascript
+export const ABOUT_PAGE = '/about'
+```
+
+and then import it whenever you need to use named routes:
+
+```javascript
+import { ABOUT_PAGE } from 'routes'
+<Route pattern={ABOUT_PAGE} />
+<Link to={ABOUT_PAGE} />
+```
+
+Additional benefit of this approach is that you get all the juice of static analysis if you use tools like flow or typescript.
+
+(thanks to @Sawtaytoes for this example)
 
 ## Caveats
 
