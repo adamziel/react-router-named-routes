@@ -179,9 +179,9 @@
                                 return "";
                             } else {
                                 var tokenName = 'splat' + i;
-                                tokens[tokenName] = match === "*" ? encodeURIComponent(val
+                                tokens[tokenName] = match === "*" ? encodeURIComponent(val)
                                 // don't escape slashes for double star, as "**" considered greedy by RR spec
-                                ) : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
+                                : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
                                 return '<' + tokenName + '>';
                             }
                         });
@@ -206,19 +206,19 @@
 
         return routePath
         // Remove braces around resolved optional params (i.e. "/path/(value)")
-        .replace(reResolvedOptionalParams, "$1"
+        .replace(reResolvedOptionalParams, "$1")
         // Remove all sequences containing at least one unresolved optional param
-        ).replace(reUnresolvedOptionalParams, ""
+        .replace(reUnresolvedOptionalParams, "")
         // After everything related to RR syntax is removed, insert actual values
-        ).replace(reTokens, function (match, token) {
+        .replace(reTokens, function (match, token) {
             return tokens[token];
-        }
+        })
         // Remove repeating slashes
-        ).replace(reRepeatingSlashes, "/"
+        .replace(reRepeatingSlashes, "/")
         // Always remove ending slash for consistency
-        ).replace(/\/+$/, ""
+        .replace(/\/+$/, "")
         // If there was a single slash only, keep it
-        ).replace(/^$/, "/");
+        .replace(/^$/, "/");
     }
 
     var resolve = NamedURLResolver.resolve.bind(NamedURLResolver);
