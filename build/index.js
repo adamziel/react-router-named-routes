@@ -117,11 +117,38 @@
                 rest = _objectWithoutProperties(_props, ['to', 'resolver', 'params']);
 
             if (!resolver) resolver = NamedURLResolver;
-            to = resolver.resolve(to, params);
 
-            return React.createElement(OriginalLink, _extends({ to: to }, rest));
+            var finalTo = resolveTo(resolver, to, params);
+            return React.createElement(OriginalLink, _extends({ to: finalTo }, rest));
         }
     });
+
+    function resolveTo(resolver, to, params) {
+        if (typeof to === "string") {
+            return resolver.resolve(to, params);
+        }
+
+        if (typeof to === "function") {
+            return function (location) {
+                return resolveTo(resolver, to(location), params);
+            };
+        }
+
+        if (!to.name) {
+            return to;
+        }
+
+        if (to.pathname) {
+            throw new Error('Cannot specify both "pathname" and "name" options in location descriptor.');
+        }
+
+        var name = to.name,
+            rest = _objectWithoutProperties(to, ['name']);
+
+        return _extends({}, rest, {
+            pathname: resolver.resolve(name, params)
+        });
+    }
 
     function MonkeyPatchNamedRoutesSupport(routes) {
         var basename = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "/";
@@ -152,9 +179,9 @@
                                 return "";
                             } else {
                                 var tokenName = 'splat' + i;
-                                tokens[tokenName] = match === "*" ? encodeURIComponent(val)
+                                tokens[tokenName] = match === "*" ? encodeURIComponent(val
                                 // don't escape slashes for double star, as "**" considered greedy by RR spec
-                                : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
+                                ) : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
                                 return '<' + tokenName + '>';
                             }
                         });
@@ -179,19 +206,19 @@
 
         return routePath
         // Remove braces around resolved optional params (i.e. "/path/(value)")
-        .replace(reResolvedOptionalParams, "$1")
+        .replace(reResolvedOptionalParams, "$1"
         // Remove all sequences containing at least one unresolved optional param
-        .replace(reUnresolvedOptionalParams, "")
+        ).replace(reUnresolvedOptionalParams, ""
         // After everything related to RR syntax is removed, insert actual values
-        .replace(reTokens, function (match, token) {
+        ).replace(reTokens, function (match, token) {
             return tokens[token];
-        })
+        }
         // Remove repeating slashes
-        .replace(reRepeatingSlashes, "/")
+        ).replace(reRepeatingSlashes, "/"
         // Always remove ending slash for consistency
-        .replace(/\/+$/, "")
+        ).replace(/\/+$/, ""
         // If there was a single slash only, keep it
-        .replace(/^$/, "/");
+        ).replace(/^$/, "/");
     }
 
     var resolve = NamedURLResolver.resolve.bind(NamedURLResolver);

@@ -25,23 +25,28 @@ this package.
 
 `npm install react-router-named-routes`
 
-## Usage before 3.0
+## React-router 4.0+
 
-1. Define all your routes in a single module. You probably do it like this anyway.
-1. Use this package before you `render()` anything:
+React-router v4 changed the game (again). We no longer have a single config file with all `<Route/>` components inside - and because of that we cannot map all routing patterns to resolve them based on their name. For this reason you will have to express all your routes using constants, like this:
 
-```js
-var routes = require("myproject/routes");
-var {FixNamedRoutesSupport} = require("react-router-named-routes");
-FixNamedRoutesSupport(routes);
+routes.js:
+```javascript
+export const USER_SHOW = '/user/:id'
 ```
 
-That's it, with three lines of code you saved yourself hours of refactoring! You may now use react-router just like in react-router 0.13:
-```js
-<Route name="todo.edit" path="todo/:id/edit" component={TodoEditForm} />
+and then import it whenever you need to use named routes:
 
-<Link to="todo.edit" params={{id: 123}}>Edit</Link>
+```javascript
+import { USER_SHOW } from 'routes';
+import { formatRoute } from 'react-router-named-routes';
+<Route pattern={USER_SHOW} />
+<Link to={formatRoute(USER_SHOW, {id: 1})} />
+<Link to={{ pathname: formatRoute(USER_SHOW, {id: 1}) }} />
 ```
+
+Additional benefit of this approach is that you get all the juice of static analysis if you use tools like flow or typescript.
+
+(thanks to @Sawtaytoes for an idea)
 
 ## React-router 3.0
 
@@ -60,28 +65,27 @@ NamedURLResolver.mergeRouteTree(routes, "/");
 
 <Route name="todo.edit" path="todo/:id/edit" component={TodoEditForm} />
 <Link to="todo.edit" params={{id: 123}}>Edit</Link>
+<Link to={{name: "todo.edit", search: "?param=1"}} params={{id: 123}}>Edit</Link>
 ```
 
-## React-router 4.0+
 
-React-router v4 changed the game (again). We no longer have a single config file with all `<Route/>` components inside - and because of that we cannot map all routing patterns to resolve them based on their name. Unfortunately there is no easy way around this, so this package does not support react-router v4 at all. What you could do, is express all your routes in a single file using constants, like this:
+## React-router 2.0 and older
 
-routes.js:
-```javascript
-export const ABOUT_PAGE = '/about'
+1. Define all your routes in a single module. You probably do it like this anyway.
+1. Use this package before you `render()` anything:
+
+```js
+var routes = require("myproject/routes");
+var {FixNamedRoutesSupport} = require("react-router-named-routes");
+FixNamedRoutesSupport(routes);
 ```
 
-and then import it whenever you need to use named routes:
+That's it, with three lines of code you saved yourself hours of refactoring! You may now use react-router just like in react-router 0.13:
+```js
+<Route name="todo.edit" path="todo/:id/edit" component={TodoEditForm} />
 
-```javascript
-import { ABOUT_PAGE } from 'routes'
-<Route pattern={ABOUT_PAGE} />
-<Link to={ABOUT_PAGE} />
+<Link to="todo.edit" params={{id: 123}}>Edit</Link>
 ```
-
-Additional benefit of this approach is that you get all the juice of static analysis if you use tools like flow or typescript.
-
-(thanks to @Sawtaytoes for this example)
 
 ## Caveats
 
