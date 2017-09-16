@@ -69,64 +69,7 @@
     NamedURLResolverClass.prototype.resolve = function (name, params) {
         if (name && name in this.routesMap) {
             var routePath = this.routesMap[name];
-
-            if (params) {
-                var tokens = {};
-
-                for (var paramName in params) {
-                    if (params.hasOwnProperty(paramName)) {
-                        var paramValue = params[paramName];
-
-                        if (paramName === "splat") {
-                            // special param name in RR, used for "*" and "**" placeholders
-                            paramValue = toArray(paramValue); // when there are multiple globs, RR defines "splat" param as array.
-                            var i = 0;
-                            routePath = routePath.replace(reSplatParams, function (match) {
-                                var val = paramValue[i++];
-                                if (val == null) {
-                                    return "";
-                                } else {
-                                    var tokenName = 'splat' + i;
-                                    tokens[tokenName] = match === "*" ? encodeURIComponent(val)
-                                    // don't escape slashes for double star, as "**" considered greedy by RR spec
-                                    : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
-                                    return '<' + tokenName + '>';
-                                }
-                            });
-                        } else {
-                            // Rougly resolve all named placeholders.
-                            // Cases:
-                            // - "/path/:param"
-                            // - "/path/(:param)"
-                            // - "/path(/:param)"
-                            // - "/path(/:param/):another_param"
-                            // - "/path/:param(/:another_param)"
-                            // - "/path(/:param/:another_param)"
-                            var paramRegex = new RegExp('(\/|\\(|\\)|^):' + paramName + '(\/|\\)|\\(|$)');
-                            routePath = routePath.replace(paramRegex, function (match, g1, g2) {
-                                tokens[paramName] = encodeURIComponent(paramValue);
-                                return g1 + '<' + paramName + '>' + g2;
-                            });
-                        }
-                    }
-                }
-            }
-
-            return routePath
-            // Remove braces around resolved optional params (i.e. "/path/(value)")
-            .replace(reResolvedOptionalParams, "$1")
-            // Remove all sequences containing at least one unresolved optional param
-            .replace(reUnresolvedOptionalParams, "")
-            // After everything related to RR syntax is removed, insert actual values
-            .replace(reTokens, function (match, token) {
-                return tokens[token];
-            })
-            // Remove repeating slashes
-            .replace(reRepeatingSlashes, "/")
-            // Always remove ending slash for consistency
-            .replace(/\/+$/, "")
-            // If there was a single slash only, keep it
-            .replace(/^$/, "/");
+            return formatRoute(routePath, params);
         }
 
         return name;
@@ -191,6 +134,66 @@
         exports.NamedURLResolver = NamedURLResolver = resolver;
     };
 
+    function formatRoute(routePath, params) {
+        if (params) {
+            var tokens = {};
+
+            for (var paramName in params) {
+                if (params.hasOwnProperty(paramName)) {
+                    var paramValue = params[paramName];
+
+                    if (paramName === "splat") {
+                        // special param name in RR, used for "*" and "**" placeholders
+                        paramValue = toArray(paramValue); // when there are multiple globs, RR defines "splat" param as array.
+                        var i = 0;
+                        routePath = routePath.replace(reSplatParams, function (match) {
+                            var val = paramValue[i++];
+                            if (val == null) {
+                                return "";
+                            } else {
+                                var tokenName = 'splat' + i;
+                                tokens[tokenName] = match === "*" ? encodeURIComponent(val)
+                                // don't escape slashes for double star, as "**" considered greedy by RR spec
+                                : encodeURIComponent(val.toString().replace(/\//g, "_!slash!_")).replace(reSlashTokens, "/");
+                                return '<' + tokenName + '>';
+                            }
+                        });
+                    } else {
+                        // Rougly resolve all named placeholders.
+                        // Cases:
+                        // - "/path/:param"
+                        // - "/path/(:param)"
+                        // - "/path(/:param)"
+                        // - "/path(/:param/):another_param"
+                        // - "/path/:param(/:another_param)"
+                        // - "/path(/:param/:another_param)"
+                        var paramRegex = new RegExp('(\/|\\(|\\)|^):' + paramName + '(\/|\\)|\\(|$)');
+                        routePath = routePath.replace(paramRegex, function (match, g1, g2) {
+                            tokens[paramName] = encodeURIComponent(paramValue);
+                            return g1 + '<' + paramName + '>' + g2;
+                        });
+                    }
+                }
+            }
+        }
+
+        return routePath
+        // Remove braces around resolved optional params (i.e. "/path/(value)")
+        .replace(reResolvedOptionalParams, "$1")
+        // Remove all sequences containing at least one unresolved optional param
+        .replace(reUnresolvedOptionalParams, "")
+        // After everything related to RR syntax is removed, insert actual values
+        .replace(reTokens, function (match, token) {
+            return tokens[token];
+        })
+        // Remove repeating slashes
+        .replace(reRepeatingSlashes, "/")
+        // Always remove ending slash for consistency
+        .replace(/\/+$/, "")
+        // If there was a single slash only, keep it
+        .replace(/^$/, "/");
+    }
+
     var resolve = NamedURLResolver.resolve.bind(NamedURLResolver);
 
     exports.Link = Link;
@@ -201,4 +204,5 @@
     exports.FixNamedRoutesSupport = MonkeyPatchNamedRoutesSupport;
     exports.setNamedURLResolver = setNamedURLResolver;
     exports.resolve = resolve;
+    exports.formatRoute = formatRoute;
 });

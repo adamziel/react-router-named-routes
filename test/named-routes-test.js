@@ -11,6 +11,7 @@ var ReactRouterNamedRoutes = require("../build/index");
 var NamedURLResolverClass = ReactRouterNamedRoutes.NamedURLResolverClass;
 var NamedURLResolver = ReactRouterNamedRoutes.NamedURLResolver;
 var Link = ReactRouterNamedRoutes.Link;
+var formatRoute = ReactRouterNamedRoutes.formatRoute;
 var createBrowserHistory = require('history/lib/createBrowserHistory').default;
 
 var expect = require('chai').expect;
@@ -213,6 +214,13 @@ describe('NamedURLResolver', function() {
     });
 });
 
+describe('formatRoute', function() {
+    it('correctly resolves optional params', function () {
+        expect(formatRoute("/path(/:param)", {param: 1})).to.equal("/path/1", "Substitute case 1");
+        expect(formatRoute("/path/(:param)", {param: 1})).to.equal("/path/1", "Substitute case 2");
+        expect(formatRoute("/path/(:param)")).to.equal("/path", "Substitute case 3");
+    });
+});
 
 describe('Link', function() {
 
