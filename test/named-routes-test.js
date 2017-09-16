@@ -342,8 +342,8 @@ if(preV4) {
                             React.createElement(Link, {to: {name: 'users.show'}}),
                             React.createElement(Link, {to: {name: 'users.show'}, params: {id: 15}}),
                             React.createElement(Link, {to: {name: 'users.show', search: '?param=1'}, params: {id: 15}}),
-                            React.createElement(Link, {to: function(location) {return {...location, search: '?param=1'}}, params: {id: 15}}),
-                            React.createElement(Link, {to: function({pathname, ...location}) {return {...location, name: 'users.show', search: '?param=1'}}, params: {id: 15}}),
+                            React.createElement(Link, {to: function(location) {return Object.assign({}, location, {search: '?param=1'})}, params: {id: 15}}),
+                            React.createElement(Link, {to: function(location) {delete location.pathname; return Object.assign({}, location, {name: 'users.show', search: '?param=1'})}, params: {id: 15}}),
                         ])
                     )
                 }
