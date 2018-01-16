@@ -61,5 +61,5 @@
     "test-browser": "echo 'open http://localhost:8080/webpack-dev-server/test'; webpack-dev-server 'mocha!./test/named-routes-test.js' --output-filename test.js",
     "build": "node_modules/.bin/babel --presets react,es2015,stage-0,stage-1,stage-2,stage-3 lib/index.js --out-file build/index.js"
   },
-  "version": "0.0.19"
+  "version": "0.0.20"
 }
