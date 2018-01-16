@@ -8,7 +8,7 @@
     "url": "https://github.com/adamziel/react-router-named-routes/issues"
   },
   "dependencies": {
-    "compare-versions": "^3.0.1"
+    "create-react-class": "^15.6.0"
   },
   "description": "Adds support for named routes to React-Router 1, 2, and 3",
   "devDependencies": {
@@ -24,7 +24,7 @@
     "babel-preset-stage-3": "^6.0.15",
     "babel-runtime": "^6.0.14",
     "chai": "^3.4.0",
-    "create-react-class": "^15.6.0",
+    "compare-versions": "^3.1.0",
     "history": "^3.3.0",
     "jsdom": "^7.0.2",
     "mocha": "^2.3.3",
@@ -38,6 +38,10 @@
     "sessionstorage": "0.0.1",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.1"
+  },
+  "peerDependencies": {
+    "react": ">=0.14",
+    "react-router": ">=3"
   },
   "engines": {
     "node": ">=0.4.2"
