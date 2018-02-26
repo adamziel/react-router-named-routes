@@ -200,7 +200,7 @@
                             tokens[paramName] = encodeURIComponent(paramValue);
                             return g1 + '<' + paramName + '>' + g2;
                         });
-                        var paramRegexRR4 = new RegExp('(.*)' + paramName + '\\?(.*)');
+                        var paramRegexRR4 = new RegExp('(.*):' + paramName + '\\?(.*)');
                         routePath = routePath.replace(paramRegexRR4, function (match, g1, g2) {
                             tokens[paramName] = encodeURIComponent(paramValue);
                             return g1 + '<' + paramName + '>' + g2;

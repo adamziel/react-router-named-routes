@@ -424,10 +424,10 @@ describe('formatRoute', function() {
     });
 
     it('correctly resolves React Router 4 optional params', function() {
-        expect(formatRoute("/path/param?", {param: 1})).to.equal("/path/1", "Substitute case");
-        expect(formatRoute("/path/param?")).to.equal("/path", "Simple omit case");
-        expect(formatRoute("/path/param1?/param2?", {param2: 2})).to.equal("/path/2", "Middle omit case 1");
-        expect(formatRoute("/path/:param1/param2?", {param1: 1})).to.equal("/path/1", "Trailing omit case 1");
+        expect(formatRoute("/path/:param?", {param: 1})).to.equal("/path/1", "Substitute case");
+        expect(formatRoute("/path/:param?")).to.equal("/path", "Simple omit case");
+        expect(formatRoute("/path/:param1?/:param2?", {param2: 2})).to.equal("/path/2", "Middle omit case 1");
+        expect(formatRoute("/path/:param1/:param2?", {param1: 1})).to.equal("/path/1", "Trailing omit case 1");
     });
 
     it('correctly resolves splat params', function () {
