@@ -423,6 +423,13 @@ describe('formatRoute', function() {
         expect(formatRoute("/path(/:param1/:param2/)", {param1: 1, param2: 2})).to.equal("/path/1/2", "Resolved sequence");
     });
 
+    it('correctly resolves React Router 4 optional params', function() {
+        expect(formatRoute("/path/param?", {param: 1})).to.equal("/path/1", "Substitute case");
+        expect(formatRoute("/path/param?")).to.equal("/path", "Simple omit case");
+        expect(formatRoute("/path/param1?/param2?", {param2: 2})).to.equal("/path/2", "Middle omit case 1");
+        expect(formatRoute("/path/:param1/param2?", {param1: 1})).to.equal("/path/1", "Trailing omit case 1");
+    });
+
     it('correctly resolves splat params', function () {
         expect(formatRoute("/some/*", {splat: 1})).to.equal("/some/1", "Trailing single star");
         expect(formatRoute("/some/*/path", {splat: 1})).to.equal("/some/1/path", "Middle single star");

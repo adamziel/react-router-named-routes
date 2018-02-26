@@ -63,6 +63,7 @@
     var reSplatParams = /\*{1,2}/g; // "/some/*/complex/**/path"
     var reResolvedOptionalParams = /\(([^:*?#]+?)\)/g; // "/path/with/(resolved/params)"
     var reUnresolvedOptionalParams = /\([^:?#]*:[^?#]*?\)/g; // "/path/with/(groups/containing/:unresolved/optional/:params)"
+    var reUnresolvedOptionalParamsRR4 = /(\/[^\/]*\?)/g; // "/path/with/groups/containing/unresolved?/optional/params?"
     var reTokens = /<(.*?)>/g;
     var reSlashTokens = /_!slash!_/g;
 
@@ -199,6 +200,11 @@
                             tokens[paramName] = encodeURIComponent(paramValue);
                             return g1 + '<' + paramName + '>' + g2;
                         });
+                        var paramRegexRR4 = new RegExp('(.*)' + paramName + '\\?(.*)');
+                        routePath = routePath.replace(paramRegexRR4, function (match, g1, g2) {
+                            tokens[paramName] = encodeURIComponent(paramValue);
+                            return g1 + '<' + paramName + '>' + g2;
+                        });
                     }
                 }
             }
@@ -209,6 +215,8 @@
         .replace(reResolvedOptionalParams, "$1")
         // Remove all sequences containing at least one unresolved optional param
         .replace(reUnresolvedOptionalParams, "")
+        // Remove all sequences containing at least one unresolved optional param in RR4
+        .replace(reUnresolvedOptionalParamsRR4, "")
         // After everything related to RR syntax is removed, insert actual values
         .replace(reTokens, function (match, token) {
             return tokens[token];
