@@ -10,7 +10,7 @@
   "dependencies": {
     "create-react-class": "^15.6.0"
   },
-  "description": "Adds support for named routes to React-Router 1, 2, and 3",
+  "description": "Adds support for named routes to React-Router 1, 2, 3, and 4.",
   "devDependencies": {
     "babel": "^6.0.15",
     "babel-cli": "^6.1.1",
@@ -61,5 +61,5 @@
     "test-browser": "echo 'open http://localhost:8080/webpack-dev-server/test'; webpack-dev-server 'mocha!./test/named-routes-test.js' --output-filename test.js",
     "build": "node_modules/.bin/babel --presets react,es2015,stage-0,stage-1,stage-2,stage-3 lib/index.js --out-file build/index.js"
   },
-  "version": "0.0.22"
+  "version": "0.0.23"
 }
