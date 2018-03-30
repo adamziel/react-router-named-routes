@@ -39,7 +39,7 @@ and then import it whenever you need to use named routes:
 ```javascript
 import { USER_SHOW } from 'routes';
 import { formatRoute } from 'react-router-named-routes';
-<Route pattern={USER_SHOW} />
+<Route path={USER_SHOW} />
 <Link to={formatRoute(USER_SHOW, {id: 1})} />
 <Link to={{ pathname: formatRoute(USER_SHOW, {id: 1}) }} />
 ```
