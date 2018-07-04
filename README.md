@@ -27,7 +27,7 @@ this package.
 
 ## React-router 4.0+
 
-React-router v4 changed the game (again). We no longer have a single config file with all `<Route/>` components inside - and because of that we cannot map all routing patterns to resolve them based on their name. For this reason you will have to express all your routes using constants, like this:
+React-router v4 changed the game and we no longer have a single config file with all `<Route/>` components inside. Because of that we cannot map all routing patterns to resolve them based on their name. You will have to express all your routes using constants, like this:
 
 routes.js:
 ```javascript
@@ -50,8 +50,7 @@ Additional benefit of this approach is that you get all the juice of static anal
 
 ## React-router 3.0
 
-There is an alternative way of working with this package.
-You may just use `<Link />` component provided by this package instead
+Use `<Link />` component provided by this package instead
 of the one provided by `react-router`. This requires some refactoring but
 not that much:
 
