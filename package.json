@@ -35,9 +35,7 @@
     "react-addons-test-utils": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-router": "^3.0.5",
-    "sessionstorage": "0.0.1",
-    "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.1"
+    "sessionstorage": "0.0.1"
   },
   "peerDependencies": {
     "react": ">=0.14",
