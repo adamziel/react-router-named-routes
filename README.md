@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/adamziel/react-router-named-routes.svg?branch=master)](https://travis-ci.org/adamziel/react-router-named-routes)
 
-If you tried upgrading to React-Router 1, 2, 3, or 4 you probably realized that
+If you tried upgrading to React-Router 1, 2, 3, 4, or 5 you probably realized that
 they deliberately removed support for named routes without any deprecations or
 grace period:
 
