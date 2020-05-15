@@ -2,24 +2,11 @@
 
 [![Build Status](https://travis-ci.org/adamziel/react-router-named-routes.svg?branch=master)](https://travis-ci.org/adamziel/react-router-named-routes)
 
-If you tried upgrading to React-Router 1, 2, 3, 4, or 5 you probably realized that
-they deliberately removed support for named routes without any deprecations or
-grace period:
+This package provides support for named routes for React-Router 1, 2, 3, 4, and 5.
+
+The support for named routes was once part of a core, but got removed at some point:
 
 https://github.com/rackt/react-router/issues/1840#issue-105240108
-
-This affects a lot of people:
-
-* This is a breaking change, and not a small one
-* A lot of existing software is effectively stuck on old version of react
-  since the upgrade requires too much effort
-* It is perfectly valid function to have, any decent web framework offers
-  some kind of url_by_name() or reverse() function
-* It just makes certain things easier.
-
-I needed to "just upgrade" my application to newer react version, without spending
-hours on refactoring. Also I **wanted** to use named routes. So I created
-this package.
 
 ## Installation
 
